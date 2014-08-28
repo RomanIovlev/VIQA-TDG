@@ -1,0 +1,5 @@
+C:\Projects\Planet3\Testing\ServicesAutomationTesting\trunk\Testing.ValuesGenerator\bin\Testing.ValuesGenerator.dll.config
+C:\Projects\Planet3\Testing\ServicesAutomationTesting\trunk\Testing.ValuesGenerator\bin\Testing.ValuesGenerator.dll
+C:\Projects\Planet3\Testing\ServicesAutomationTesting\trunk\Testing.ValuesGenerator\bin\Testing.ValuesGenerator.pdb
+C:\Projects\Planet3\Testing\ServicesAutomationTesting\trunk\Testing.ValuesGenerator\obj\Release\Testing.ValuesGenerator.dll
+C:\Projects\Planet3\Testing\ServicesAutomationTesting\trunk\Testing.ValuesGenerator\obj\Release\Testing.ValuesGenerator.pdb

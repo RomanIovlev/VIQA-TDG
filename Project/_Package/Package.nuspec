@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
+  <metadata>
+    <id>Testing.ValuesGenerator</id>
+    <version>$version$</version>
+    <title>Testing.ValuesGenerator</title>
+    <authors>Planet3</authors>
+    <owners>Planet3</owners>
+    <licenseUrl>https://docs-innovations.i-free.ru/display/devdpt/Testing.ValuesGenerator.License</licenseUrl>
+    <projectUrl>https://docs-innovations.i-free.ru/display/devdpt/Testing.ValuesGenerator</projectUrl>
+    <iconUrl>https://docs.i-free.com/download/thumbnails/nnnnnnn/Testing.ValuesGenerator.png</iconUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>VI Data Values Generator</description>
+    <releaseNotes></releaseNotes>
+    <copyright>Copyright Planet3 2012</copyright>
+    <tags></tags>
+    <!--dependencies> 
+      <dependency id="DEPENDENCY_PACKAGE_ID" /> 
+    </dependencies-->
+  </metadata>
+</package>
