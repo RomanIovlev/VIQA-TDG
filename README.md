@@ -8,8 +8,8 @@ http://pumpshooter.com/8Yz3pxIC
 Вот так можно управлять входными наборами данных фильтруя по группам и/или по значениям
 http://pumpshooter.com/zJw346XZ
 
-выглядят тесты при этом примерно так
+Тесты в Решарпере выглядят так:
 http://pumpshooter.com/7cSBkBaQ
 
-описываются так
+В коде так:
 http://pumpshooter.com/xHpiIlc4
