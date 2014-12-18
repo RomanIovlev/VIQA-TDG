@@ -1,20 +1,19 @@
 package Data;
 
-import Annotations.VIDataValues;
-
 /**
  * Created by 12345 on 16.12.2014.
  */
 public class DataValues {
-    @VIDataValues(enumValues = {MyEnum.One, MyEnum.Two}, classVal = MyEnum.class)
-    private String groupName;
-    private Object[] values;
-
-    public DataValues(String groupName, Object[] values)     {
+    public static Object getEnums(Object clazz) throws Exception {
+        Object obj = clazz.getClass().getAnnotations()[0].getClass().getMethod("enumValues").invoke(clazz);
+        int i = 1;
+        return obj;
+    }
+/*
+    public DataValues(String groupName, Object[] values) {
         this.groupName = groupName;
         this.values = values;
     }
-
 
     public static FieldGroup GetGroupsFromAttributes(FieldInfo field, FilterData filterData)
     {
@@ -40,5 +39,5 @@ public class DataValues {
         return (valGroups.Any())
                 ? new FieldGroup(field.Name, FieldType.Field, valGroups.SelectMany(_ => _._values).ToArray())
         : null;
-    }
+    }*/
 }

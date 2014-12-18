@@ -4,7 +4,7 @@ package Data;
  * Created by 12345 on 16.12.2014.
  */
 public class FieldGroup {
-
+/*
     public readonly string FieldName;
     public readonly FieldType FieldType;
     public readonly List<Object> Values;
@@ -31,5 +31,5 @@ public class FieldGroup {
         return result;
         }).ToList()).ToList();
     }
-}
+}*/
 }

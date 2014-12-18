@@ -1,7 +1,5 @@
 package Annotations;
 
-import Data.MyEnum;
-
 import java.lang.annotation.*;
 
 /**
@@ -9,10 +7,10 @@ import java.lang.annotation.*;
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.TYPE, ElementType.FIELD})
-public @interface VIDataValues {
+public @interface VIDataValues  {
     public String[] value() default {};
     public int[] intValues() default {};
     public boolean[] boolValues() default {};
-    public MyEnum[] enumValues() default {};
-    public Class<?> classVal();
+    public Class<?>[] enumValues() default {};
+    //public Class<?> classVal();
 }
