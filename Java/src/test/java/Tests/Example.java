@@ -11,5 +11,5 @@ public class Example {
     public int Nums;
 */
     @EnumData(enumValues = TestEnum.One)
-    public TestEnum Enums;
+    public TestEnum Enums = TestEnum.Two;
 }

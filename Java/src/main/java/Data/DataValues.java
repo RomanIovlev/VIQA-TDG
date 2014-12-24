@@ -5,7 +5,7 @@ package Data;
  */
 public class DataValues {
     public static Object getEnums(Object clazz) throws Exception {
-        Object obj = clazz.getClass().getAnnotations()[0].getClass().getMethod("enumValues").invoke(clazz);
+        Object obj = clazz.getClass().getFields()[0].getAnnotations()[0].getClass().getMethod("enumValues").invoke(clazz);
         int i = 1;
         return obj;
     }
