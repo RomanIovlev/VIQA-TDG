@@ -1,6 +1,7 @@
 package Tests;
 
-import Data.DataValues;
+import TestsExample.Example;
+import TestsExample.SomeDataProvider;
 import org.testng.annotations.Test;
 
 /**
@@ -9,9 +10,7 @@ import org.testng.annotations.Test;
 
 public class Tests {
 
-    @Test
-    public void someTest() throws Exception {
-        TestEnum t = (TestEnum)DataValues.getEnums(new Example());
-        int j = 2;
+    @Test(dataProviderClass = SomeDataProvider.class, dataProvider = "someDP")
+    public void someTest(Example ex) throws Exception {
     }
 }
