@@ -17,6 +17,7 @@ local.properties
 .loadpath
 Java/.idea
 *.iml
+Java/target/
 
 
 # External tool builders
