@@ -1,4 +1,4 @@
-package annotations;
+package viAnnotations;
 
 import java.lang.annotation.*;
 
@@ -9,5 +9,5 @@ import java.lang.annotation.*;
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.TYPE, ElementType.FIELD})
 public @interface VIComplexData {
-    
+
 }
