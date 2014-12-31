@@ -3,7 +3,6 @@ package TestsExample;
 import annotations.*;
 
 import static TestsExample.TestEnum.*;
-import static utils.PrintUtils.printGroupValues;
 
 /**
  * Created by 12345 on 18.12.2014.
@@ -33,13 +32,4 @@ public class Example {
 
     @VIComplexData
     public SubClass subClass = new SubClass();
-
-    @Override
-    public String toString() {
-        try {
-            return printGroupValues(this);
-        } catch (Exception e) {
-            return "Name generation failed";
-        }
-    }
 }
