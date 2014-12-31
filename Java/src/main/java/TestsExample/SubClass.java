@@ -5,6 +5,7 @@ import annotations.VIIntGroupData;
 import annotations.VIStringGroupData;
 
 import static TestsExample.TestEnum.*;
+import static utils.PrintUtils.printGroupValues;
 
 /**
  * Created by 12345 on 29.12.2014.
@@ -22,4 +23,13 @@ public class SubClass {
 
     @VIStringGroupData(value = {"string value", "", "1"}, group = "Test2")
     public String Strings = "Default String Value";
+
+    @Override
+    public String toString() {
+        try {
+            return printGroupValues(this);
+        } catch (Exception e) {
+            return "Name generation failed";
+        }
+    }
 }
