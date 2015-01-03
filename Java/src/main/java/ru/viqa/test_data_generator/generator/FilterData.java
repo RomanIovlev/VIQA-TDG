@@ -1,6 +1,6 @@
-package generator;
+package ru.viqa.test_data_generator.generator;
 
-import funcInterfaces.*;
+import ru.viqa.test_data_generator.funcInterfaces.*;
 
 /**
  * Created by 12345 on 28.12.2014.

@@ -1,6 +1,6 @@
-package utils;
+package ru.viqa.test_data_generator.utils;
 
-import annotations.VIComplexData;
+import ru.viqa.test_data_generator.annotations.VIComplexData;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;

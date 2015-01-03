@@ -1,4 +1,4 @@
-package funcInterfaces;
+package ru.viqa.test_data_generator.funcInterfaces;
 
 /**
  * Created by roman.i on 01.10.2014.

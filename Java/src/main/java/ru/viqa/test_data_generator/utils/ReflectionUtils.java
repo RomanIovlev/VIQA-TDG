@@ -1,4 +1,4 @@
-package utils;
+package ru.viqa.test_data_generator.utils;
 
 import java.lang.reflect.Field;
 

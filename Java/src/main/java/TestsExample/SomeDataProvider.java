@@ -1,13 +1,13 @@
 package TestsExample;
 
-import generator.VIDataGenerator;
+import ru.viqa.test_data_generator.generator.VIDataGenerator;
 import org.testng.annotations.DataProvider;
 
 import java.util.List;
 
 import static TestsExample.TestEnum.One;
-import static generator.VIDataGenerator.to2DArray;
-import static generator.ValuesGroup.ALL_GROUPS;
+import static ru.viqa.test_data_generator.generator.VIDataGenerator.to2DArray;
+import static ru.viqa.test_data_generator.generator.ValuesGroup.ALL_GROUPS;
 
 /**
  * Created by 12345 on 29.12.2014.

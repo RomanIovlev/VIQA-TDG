@@ -1,15 +1,14 @@
-package generator;
+package ru.viqa.test_data_generator.generator;
 
-import funcInterfaces.FuncT;
-import funcInterfaces.FuncTT;
+import ru.viqa.test_data_generator.funcInterfaces.FuncT;
+import ru.viqa.test_data_generator.funcInterfaces.FuncTT;
 
-import java.lang.reflect.Array;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 
-import static generator.ValuesGroup.getFieldGroupsCombinationsFromAttributes;
-import static generator.ValuesGroup.getGroupsFromAttributes;
+import static ru.viqa.test_data_generator.generator.ValuesGroup.getFieldGroupsCombinationsFromAttributes;
+import static ru.viqa.test_data_generator.generator.ValuesGroup.getGroupsFromAnnotations;
 import static java.lang.reflect.Array.newInstance;
 import static java.util.Arrays.asList;
 
@@ -19,16 +18,16 @@ import static java.util.Arrays.asList;
 public class VIDataGenerator<T> {
     private Class<?> dataType;
     private FilterData fieldsFilter;
-    private FuncTT<T, Boolean> dataRule = t -> true;
+    private FuncTT<T, Boolean>[] dataRules;
     public VIDataGenerator<T> fieldsFilter(FuncTT<String, Boolean> fieldsRule) { fieldsFilter.fieldsRule = fieldsRule; return this; }
     public VIDataGenerator<T> whiteList(String... value) { fieldsFilter.whiteList = value; return this; }
     public VIDataGenerator<T> blackList(String... value) { fieldsFilter.blackList = value; return this; }
-    public VIDataGenerator<T> dataFilter(FuncTT<T, Boolean> dataRule) { this.dataRule = dataRule; return this;}
+    public VIDataGenerator<T> dataFilter(FuncTT<T, Boolean>... dataRule) { this.dataRules = dataRule; return this;}
 
     private List<FieldGroup> getGroups() throws Exception {
         List<FieldGroup> fieldGroups = new ArrayList<>();
         for (Field field : dataType.getFields()) {
-            FieldGroup fieldGroup = getGroupsFromAttributes(field, new FilterData(fieldsFilter, field.getName()));
+            FieldGroup fieldGroup = getGroupsFromAnnotations(field, new FilterData(fieldsFilter, field.getName()));
             if (fieldGroup != null)
                 fieldGroups.add(fieldGroup);
         }
@@ -41,7 +40,7 @@ public class VIDataGenerator<T> {
             for (Object value : fieldGroup.values) {
                 T testInstance = (T) dataType.newInstance();
                 dataType.getField(fieldGroup.fieldName).set(testInstance, value);
-                if (dataRule.invoke(testInstance))
+                if (dataRules == null || meetDataRules(testInstance, dataRules))
                     result.add(testInstance);
             }
         return result;
@@ -59,10 +58,17 @@ public class VIDataGenerator<T> {
             T testInstance = (T) dataType.newInstance();
             for (FieldGroup projectField : projectFields)
                 dataType.getField(projectField.fieldName).set(testInstance, projectField.values.get(0));
-            if (dataRule.invoke(testInstance))
+            if (dataRules == null || meetDataRules(testInstance, dataRules))
                 result.add(testInstance);
         }
         return result;
+    }
+
+    private boolean meetDataRules(T testInstance, FuncTT<T, Boolean>[] dataRules) throws Exception {
+        for(FuncTT<T, Boolean> dataRule : dataRules)
+            if (!dataRule.invoke(testInstance))
+                return false;
+        return true;
     }
 
     private List<List<FieldGroup>> getCombinations(List<FieldGroup> fieldGroups) {

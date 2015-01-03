@@ -1,8 +1,8 @@
-package generator;
+package ru.viqa.test_data_generator.generator;
 
-import annotations.VIAllData;
-import annotations.VIComplexData;
-import funcInterfaces.FuncT;
+import ru.viqa.test_data_generator.annotations.VIAllData;
+import ru.viqa.test_data_generator.annotations.VIComplexData;
+import ru.viqa.test_data_generator.funcInterfaces.FuncT;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import static utils.ReflectionUtils.isClass;
+import static ru.viqa.test_data_generator.utils.ReflectionUtils.isClass;
 import static org.apache.commons.lang3.ArrayUtils.toObject;
 
 /**
@@ -27,7 +27,7 @@ public class ValuesGroup {
         this.values = values;
     }
 
-    public static FieldGroup getGroupsFromAttributes(Field field, FilterData filterData) throws Exception {
+    public static FieldGroup getGroupsFromAnnotations(Field field, FilterData filterData) throws Exception {
         return getFieldGroups(field, filterData, () -> new VIDataGenerator(field.getType(), filterData).generateValues());
     }
 

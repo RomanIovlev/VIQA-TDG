@@ -1,9 +1,9 @@
 package TestsExample;
 
-import annotations.*;
+import ru.viqa.test_data_generator.annotations.*;
 
 import static TestsExample.TestEnum.*;
-import static utils.PrintUtils.printGroupValues;
+import static ru.viqa.test_data_generator.utils.PrintUtils.printGroupValues;
 
 /**
  * Created by 12345 on 18.12.2014.

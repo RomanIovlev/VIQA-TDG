@@ -1,4 +1,4 @@
-package viAnnotations;
+package ru.viqa.test_data_generator.annotations;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

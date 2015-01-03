@@ -1,11 +1,11 @@
 package TestsExample;
 
-import annotations.VIAllData;
-import annotations.VIIntGroupData;
-import annotations.VIStringGroupData;
+import ru.viqa.test_data_generator.annotations.VIAllData;
+import ru.viqa.test_data_generator.annotations.VIIntGroupData;
+import ru.viqa.test_data_generator.annotations.VIStringGroupData;
 
 import static TestsExample.TestEnum.*;
-import static utils.PrintUtils.printGroupValues;
+import static ru.viqa.test_data_generator.utils.PrintUtils.printGroupValues;
 
 /**
  * Created by 12345 on 29.12.2014.

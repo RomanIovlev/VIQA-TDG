@@ -1,4 +1,4 @@
-package generator;
+package ru.viqa.test_data_generator.generator;
 
 import java.util.ArrayList;
 import java.util.List;
