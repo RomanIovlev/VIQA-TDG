@@ -9,8 +9,6 @@ import org.testng.annotations.Test;
  */
 
 public class Tests {
-
-
     @Test(dataProviderClass = SomeDataProvider.class, dataProvider = "someDP")
     public void someTest(Example ex) throws Exception {
     }

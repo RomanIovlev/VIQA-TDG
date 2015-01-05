@@ -15,8 +15,7 @@ public class FilterData {
     public FilterData() { }
 
     public FilterData(String[] whiteList, String[] blackList, FuncTT<String, Boolean> fieldsRule,
-                      String[] availableGroups, String breadcrumb)
-    {
+                      String[] availableGroups, String breadcrumb) {
         this.whiteList = whiteList;
         this.blackList = blackList;
         this.fieldsRule = fieldsRule;

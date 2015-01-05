@@ -35,21 +35,14 @@ public class SomeDataProvider {
                 .blackList("*.Strings")
                 .generateCombinations(ALL_GROUPS);
 
-        List examplesG1w = new VIDataGenerator(Example.class)
-                .fieldsFilter(b -> { String B = b.toString();
-                    return !B.contains("subClass") || B.contains("Enums");} )
+        List examplesG1w = new VIDataGenerator<Example>(Example.class)
+                .fieldsFilter(b -> !b.contains("subClass") || b.contains("Enums"))
                 .generateCombinations(ALL_GROUPS);
-        List examplesValue1 = new VIDataGenerator(Example.class)
-                .dataFilter(e -> {
-                    Example E = (Example) e;
-                    return E.Enums == One && !E.subClass.Strings.equals("");
-                })
+        List examplesValue1 = new VIDataGenerator<Example>(Example.class)
+                .dataFilter(e -> e.Enums == One && !e.subClass.Strings.equals(""))
                 .generateCombinations(ALL_GROUPS);
-        List examplesValue2 = new VIDataGenerator(Example.class)
-                .dataFilter(e -> {
-                    Example E = (Example) e;
-                    return E.Enums != One || (E.Strings.equals(""));
-                })
+        List examplesValue2 = new VIDataGenerator<Example>(Example.class)
+                .dataFilter(e -> e.Enums != One || (e.Strings.equals("")))
                 .generateCombinations(ALL_GROUPS);
 
         List<Example> examples2 = new VIDataGenerator(Example.class).generateValues(ALL_GROUPS);

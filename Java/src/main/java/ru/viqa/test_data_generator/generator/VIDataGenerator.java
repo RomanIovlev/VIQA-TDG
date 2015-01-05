@@ -39,9 +39,11 @@ public class VIDataGenerator<T> {
         for (FieldGroup fieldGroup : getGroups())
             for (Object value : fieldGroup.values) {
                 T testInstance = (T) dataType.newInstance();
-                dataType.getField(fieldGroup.fieldName).set(testInstance, value);
-                if (dataRules == null || meetDataRules(testInstance, dataRules))
-                    result.add(testInstance);
+                if (!dataType.getField(fieldGroup.fieldName).get(testInstance).equals(value)) {
+                    dataType.getField(fieldGroup.fieldName).set(testInstance, value);
+                    if (dataRules == null || meetDataRules(testInstance, dataRules))
+                        result.add(testInstance);
+                }
             }
         return result;
     }
