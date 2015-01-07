@@ -6,8 +6,10 @@ import ru.viqa.test_data_generator.funcInterfaces.FuncTT;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
-import static ru.viqa.test_data_generator.generator.ValuesGroup.getFieldGroupsCombinationsFromAttributes;
+import static ru.viqa.test_data_generator.generator.ValuesGroup.*;
+import static ru.viqa.test_data_generator.generator.ValuesGroup.getFieldGroupsCombinationsFromAnnotations;
 import static ru.viqa.test_data_generator.generator.ValuesGroup.getGroupsFromAnnotations;
 import static java.lang.reflect.Array.newInstance;
 import static java.util.Arrays.asList;
@@ -16,6 +18,7 @@ import static java.util.Arrays.asList;
  * Created by 12345 on 28.12.2014.
  */
 public class VIDataGenerator<T> {
+    private FuncT<T> createFunc;
     private Class<?> dataType;
     private FilterData fieldsFilter;
     private FuncTT<T, Boolean>[] dataRules;
@@ -38,7 +41,7 @@ public class VIDataGenerator<T> {
         List<T> result = new ArrayList<>();
         for (FieldGroup fieldGroup : getGroups())
             for (Object value : fieldGroup.values) {
-                T testInstance = (T) dataType.newInstance();
+                T testInstance = createFunc.invoke();
                 if (!dataType.getField(fieldGroup.fieldName).get(testInstance).equals(value)) {
                     dataType.getField(fieldGroup.fieldName).set(testInstance, value);
                     if (dataRules == null || meetDataRules(testInstance, dataRules))
@@ -51,13 +54,13 @@ public class VIDataGenerator<T> {
     private List<T> getFieldsCombinations() throws Exception {
         List<FieldGroup> fieldGroups = new ArrayList<>();
         for (Field field : dataType.getFields()) {
-            FieldGroup fieldGroup = getFieldGroupsCombinationsFromAttributes(field, new FilterData(fieldsFilter, field.getName()));
+            FieldGroup fieldGroup = getFieldGroupsCombinationsFromAnnotations(field, new FilterData(fieldsFilter, field.getName()));
             if (fieldGroup != null && fieldGroup.values.size() > 0)
                 fieldGroups.add(fieldGroup);
         }
         List<T> result = new ArrayList<>();
         for (List<FieldGroup> projectFields : getCombinations(fieldGroups)) {
-            T testInstance = (T) dataType.newInstance();
+            T testInstance = createFunc.invoke();
             for (FieldGroup projectField : projectFields)
                 dataType.getField(projectField.fieldName).set(testInstance, projectField.values.get(0));
             if (dataRules == null || meetDataRules(testInstance, dataRules))
@@ -94,17 +97,22 @@ public class VIDataGenerator<T> {
     }
 
     public List<T> generateValues(String... availableGroups) throws Exception {
-        fieldsFilter.availableGroups = (fieldsFilter.availableGroups != null)
-            ? fieldsFilter.availableGroups
-            : availableGroups;
+        setAvailableGroups(availableGroups);
         return generator(this::getFieldsGroups);
     }
 
     public List<T> generateCombinations(String... availableGroups) throws Exception {
-        fieldsFilter.availableGroups = (fieldsFilter.availableGroups != null)
-                ? fieldsFilter.availableGroups
-                : availableGroups;
+        setAvailableGroups(availableGroups);
         return generator(this::getFieldsCombinations);
+    }
+
+    private void setAvailableGroups(String[] availableGroups) {
+        if (fieldsFilter.availableGroups != null ||
+            (availableGroups.length == 1 && availableGroups[0].equals(DEFAULT_GROUP)))
+            return;
+        fieldsFilter.availableGroups = (availableGroups.length == 0)
+                ? new String[] { ALL_GROUPS }
+                : availableGroups;
     }
 
     public static <T> T[][] to2DArray(List<T> values, Class<T> dataType) {
@@ -120,19 +128,21 @@ public class VIDataGenerator<T> {
     private List<T> generator(FuncT<List<T>> generator) throws Exception {
         try {
             if (fieldsFilter.availableGroups == null || fieldsFilter.availableGroups.length == 0)
-                return asList((T) dataType.newInstance());
+                return asList(createFunc.invoke());
             return generator.invoke();
         }
         catch (Exception ex) { throw new Exception("Error in DataGeneration: " + ex.getMessage()); }
     }
 
-    public VIDataGenerator(Class<T> type) throws Exception {
-        this.dataType = type;
+    public VIDataGenerator(FuncT<T> createFunc) throws Exception {
+        this.createFunc = createFunc;
+        this.dataType = createFunc.invoke().getClass();
         fieldsFilter = new FilterData();
     }
 
-    public VIDataGenerator(Class<T> type, FilterData fieldsFilter) throws Exception {
-        dataType = type;
+    public VIDataGenerator(Class<?> dataType, FilterData fieldsFilter) throws Exception {
+        createFunc = () -> (T)dataType.newInstance();
+        this.dataType = dataType;
         this.fieldsFilter = fieldsFilter;
     }
 }

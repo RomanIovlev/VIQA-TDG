@@ -11,6 +11,7 @@ import static java.util.Arrays.asList;
 public class FieldGroup {
     public String fieldName;
     public List<Object> values;
+    public int[] arrayCounts;
 
     public FieldGroup(String fieldName, Object... values)
     {

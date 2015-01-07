@@ -5,11 +5,14 @@ import ru.viqa.test_data_generator.annotations.VIComplexData;
 import ru.viqa.test_data_generator.funcInterfaces.FuncT;
 
 import java.lang.annotation.Annotation;
+import java.lang.reflect.Array;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import static java.lang.reflect.Array.newInstance;
+import static java.util.Arrays.copyOf;
 import static ru.viqa.test_data_generator.utils.ReflectionUtils.isClass;
 import static org.apache.commons.lang3.ArrayUtils.toObject;
 
@@ -20,6 +23,7 @@ public class ValuesGroup {
     private String groupName;
     private Object[] values;
     public static  final String ALL_GROUPS = "ALL";
+    public static  final String DEFAULT_GROUP = "DEFAULT";
 
     public ValuesGroup(String groupName, Object[] values)
     {
@@ -31,7 +35,7 @@ public class ValuesGroup {
         return getFieldGroups(field, filterData, () -> new VIDataGenerator(field.getType(), filterData).generateValues());
     }
 
-    public static FieldGroup getFieldGroupsCombinationsFromAttributes(Field field, FilterData filterData) throws Exception {
+    public static FieldGroup getFieldGroupsCombinationsFromAnnotations(Field field, FilterData filterData) throws Exception {
         return getFieldGroups(field, filterData, () -> new VIDataGenerator(field.getType(), filterData).generateCombinations());
     }
 
@@ -56,9 +60,10 @@ public class ValuesGroup {
         if (valGroups.size() > 0) {
             List<Object> fieldValues = new ArrayList<>();
             for (ValuesGroup valGroup : valGroups)
-                for(Object value : valGroup.values)
-                    if (!fieldValues.contains(value))
-                        fieldValues.add(value);
+                if (valGroup.values != null)
+                    for(Object value : valGroup.values)
+                        if (!fieldValues.contains(value))
+                            fieldValues.add(value);
             return new FieldGroup(field.getName(), fieldValues.toArray());
         }
         return null;
@@ -73,11 +78,12 @@ public class ValuesGroup {
             else
                 try {
                     Object valuesObj = annotation.getClass().getMethod("value").invoke(annotation);
+                    if (!valuesObj.getClass().isArray()) continue;
                     Object[] values = null;
                     if (isClass(valuesObj.getClass(), int[].class))
-                        values = Arrays.copyOf(toObject((int[]) valuesObj), ((int[]) valuesObj).length, Integer[].class);
+                        values = copyOf(toObject((int[]) valuesObj), ((int[]) valuesObj).length, Integer[].class);
                         else { if (isClass(valuesObj.getClass(), boolean[].class))
-                            values = Arrays.copyOf(toObject((boolean[]) valuesObj), ((boolean[]) valuesObj).length, Boolean[].class);
+                            values = copyOf(toObject((boolean[]) valuesObj), ((boolean[]) valuesObj).length, Boolean[].class);
                             else try {
                                 values = (Object[]) valuesObj;
                             } catch (Exception ignored) {}
@@ -86,10 +92,20 @@ public class ValuesGroup {
                         String groupName = ALL_GROUPS;
                         try {
                             groupName = (String) annotation.getClass().getMethod("group").invoke(annotation);
-                        } catch (Exception ignored) { }
+                        } catch (Exception ignored) {}
+                        if (field.getType().isArray()) {
+                            Object[] newValues = new Object[values.length + 1];
+                            for (int i = 0; i <= values.length; i++) {
+                                Object[] array = (Object[]) newInstance(field.getType().getComponentType(), i);
+                                for (int j = 0; j < i; j++)
+                                    array[j] = values[j];
+                                newValues[i] = array;
+                            }
+                            values = newValues;
+                        }
                         valGroup = new ValuesGroup(groupName, values);
                     }
-                } catch (Exception ex) { throw new Exception(ex.getMessage());}
+                } catch (Exception ignore) {}
             if (valGroup != null)
                 result.add(valGroup);
         }

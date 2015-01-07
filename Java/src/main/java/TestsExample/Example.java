@@ -10,6 +10,12 @@ import static ru.viqa.test_data_generator.utils.PrintUtils.printGroupValues;
  */
 public class Example {
 
+    @Bad
+    public String[] AStrings = new String[]{};
+
+    @VIStringGroupData({"One", "Two", "Three"})
+    public String[] ArrayStrings = new String[]{};
+
     @VIAllData
     @VIEnumGroupData(value = {One, Three}, group = "Test")
     public TestEnum Enums = Two;
