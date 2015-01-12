@@ -11,6 +11,6 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.TYPE, ElementType.FIELD})
 public @interface VIEnumGroupData {
-    public TestEnum[] value();
+    public PassportType[] value();
     public String group();
 }

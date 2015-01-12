@@ -5,9 +5,8 @@ import org.testng.annotations.DataProvider;
 
 import java.util.List;
 
-import static TestsExample.TestEnum.One;
+import static TestsExample.PassportType.RUSSIAN;
 import static ru.viqa.test_data_generator.generator.VIDataGenerator.to2DArray;
-import static ru.viqa.test_data_generator.generator.ValuesGroup.ALL_GROUPS;
 
 /**
  * Created by 12345 on 29.12.2014.
@@ -23,26 +22,33 @@ public class SomeDataProvider {
         List<Example> examplesAll = new VIDataGenerator<>(Example::new)
                 .generateCombinations();
         List<Example> examples1w = new VIDataGenerator<>(Example::new)
-                .whiteList("subClass.Strings")
+                .whiteList("passport.name")
                 .generateCombinations();
         List<Example> examples1b = new VIDataGenerator<>(Example::new)
-                .blackList("subClass.Strings")
+                .blackList("passport.name")
                 .generateCombinations();
         List<Example> examples1w2 = new VIDataGenerator<>(Example::new)
-                .whiteList("*.Strings")
+                .whiteList("*.name")
                 .generateCombinations();
         List<Example> examples1b2 = new VIDataGenerator<>(Example::new)
-                .blackList("*.Strings")
+                .blackList("*.name")
                 .generateCombinations();
 
-        List examplesG1w = new VIDataGenerator<>(Example::new)
-                .fieldsFilter(b -> !b.contains("subClass") || b.contains("Enums"))
+        List<Example> examplesG1w = new VIDataGenerator<>(Example::new)
+                .fieldsFilter(fieldName -> {
+                    if (fieldName.contains("passport"))
+                        return fieldName.contains("type");
+                    else return true;
+                })
+                .generateCombinations();
+        List examplesG1short = new VIDataGenerator<>(Example::new)
+                .fieldsFilter(fieldName -> !fieldName.contains("passport") || fieldName.contains("type"))
                 .generateCombinations();
         List examplesValue1 = new VIDataGenerator<>(Example::new)
-                .dataFilter(e -> e.Enums == One && !e.subClass.Strings.equals(""))
+                .dataFilter(e -> e.type == RUSSIAN && !e.passport.name.equals(""))
                 .generateCombinations();
         List examplesValue2 = new VIDataGenerator<>(Example::new)
-                .dataFilter(e -> e.Enums != One || (e.Strings.equals("")))
+                .dataFilter(e -> e.type != RUSSIAN || (e.name.equals("")))
                 .generateCombinations();
 
         List<Example> examples2 = new VIDataGenerator<>(Example::new).generateValues();
