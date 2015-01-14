@@ -42,7 +42,8 @@ public class VIDataGenerator<T> {
         for (FieldGroup fieldGroup : getGroups())
             for (Object value : fieldGroup.values) {
                 T testInstance = createFunc.invoke();
-                if (!dataType.getField(fieldGroup.fieldName).get(testInstance).equals(value)) {
+                Object fieldValue = dataType.getField(fieldGroup.fieldName).get(testInstance);
+                if (fieldValue != null && !fieldValue.equals(value)) {
                     dataType.getField(fieldGroup.fieldName).set(testInstance, value);
                     if (dataRules == null || meetDataRules(testInstance, dataRules))
                         result.add(testInstance);

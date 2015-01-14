@@ -80,11 +80,17 @@ public class PrintUtils {
         for (Field field : obj.getClass().getFields())
             if (!isStatic(field.getModifiers()))
                 result += ((field.getAnnotation(VIComplexData.class) != null)
-                    ? getFieldsValues(field.get(obj))
-                    : (field.getType().isArray())
+                        ? getFieldsValues(field.get(obj))
+                        : (field.getType().isArray())
                         ? printArray(",", (Object[]) field.get(obj))
-                        : field.get(obj).toString())
+                        : printFieldValue(field.get(obj)))
                         + ";";
         return result.substring(0, result.length()-1);
+    }
+
+    private static String printFieldValue(Object fieldValue) throws IllegalAccessException {
+        if (fieldValue != null)
+            return fieldValue.toString();
+        else return "null";
     }
 }
