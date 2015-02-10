@@ -24,8 +24,7 @@ public class ValuesGroup {
     public static  final String ALL_GROUPS = "ALL";
     public static  final String DEFAULT_GROUP = "DEFAULT";
 
-    public ValuesGroup(String groupName, Object[] values)
-    {
+    public ValuesGroup(String groupName, Object[] values) {
         this.groupName = groupName;
         this.values = values;
     }
@@ -35,37 +34,42 @@ public class ValuesGroup {
     }
 
     public static FieldGroup getFieldGroupsCombinationsFromAnnotations(Field field, FilterData filterData) throws Exception {
-        return getFieldGroups(field, filterData, () -> new VIDataGenerator(field.getType(), filterData).generateCombinations());
+        return getFieldGroups(field, filterData, () -> {
+            VIDataGenerator dg = new VIDataGenerator(field.getType(), filterData);
+            List result = dg.generateCombinations();
+            return result;});
     }
 
     private static FieldGroup getFieldGroups(Field field, FilterData filterData, FuncT<List<Object>> recursive) throws Exception {
-        if (field.getAnnotation(VIComplexData.class) != null)
-            return new FieldGroup(field.getName(), recursive.invoke().toArray());
-        if (!filterData.allowGeneration())
+        try {
+            if (field.getAnnotation(VIComplexData.class) != null)
+                return new FieldGroup(field.getName(), recursive.invoke().toArray());
+            if (!filterData.allowGeneration())
+                return null;
+
+            List<ValuesGroup> valGroups = getGroupValuesFromAnnotations(field);
+
+            List<String> availableGroupsLowerCase = new ArrayList<>();
+            for (String str : filterData.availableGroups)
+                availableGroupsLowerCase.add(str.toLowerCase());
+            if (!availableGroupsLowerCase.contains(ALL_GROUPS.toLowerCase())) {
+                List<ValuesGroup> suitableGroups = new ArrayList<>();
+                for (ValuesGroup valGroup : valGroups)
+                    if (availableGroupsLowerCase.contains(valGroup.groupName.toLowerCase()))
+                        suitableGroups.add(valGroup);
+                valGroups = suitableGroups;
+            }
+            if (valGroups.size() > 0) {
+                List<Object> fieldValues = new ArrayList<>();
+                for (ValuesGroup valGroup : valGroups)
+                    if (valGroup.values != null)
+                        for(Object value : valGroup.values)
+                            if (!fieldValues.contains(value))
+                                fieldValues.add(value);
+                return new FieldGroup(field.getName(), fieldValues.toArray());
+            }
             return null;
-
-        List<ValuesGroup> valGroups = getGroupValuesFromAnnotations(field);
-
-        List<String> availableGroupsLowerCase = new ArrayList<>();
-        for (String str : filterData.availableGroups)
-            availableGroupsLowerCase.add(str.toLowerCase());
-        if (!availableGroupsLowerCase.contains(ALL_GROUPS.toLowerCase())) {
-            List<ValuesGroup> suitableGroups = new ArrayList<>();
-            for (ValuesGroup valGroup : valGroups)
-                if (availableGroupsLowerCase.contains(valGroup.groupName.toLowerCase()))
-                    suitableGroups.add(valGroup);
-            valGroups = suitableGroups;
-        }
-        if (valGroups.size() > 0) {
-            List<Object> fieldValues = new ArrayList<>();
-            for (ValuesGroup valGroup : valGroups)
-                if (valGroup.values != null)
-                    for(Object value : valGroup.values)
-                        if (!fieldValues.contains(value))
-                            fieldValues.add(value);
-            return new FieldGroup(field.getName(), fieldValues.toArray());
-        }
-        return null;
+        } catch (Exception ex) { throw new Exception("Error in getting fields groups:" + ex.getMessage()); }
     }
 
     public static List<ValuesGroup> getGroupValuesFromAnnotations(Field field) throws Exception {
@@ -119,6 +123,7 @@ public class ValuesGroup {
     }
 
     private static Object[] fillFieldIDAnnotation(Field field) throws Exception {
+        try {
         VIFieldID fieldIDAnnotation = field.getAnnotation(VIFieldID.class);
         if (fieldIDAnnotation == null || fieldIDAnnotation.id().equals(""))
             return null;
@@ -138,6 +143,7 @@ public class ValuesGroup {
             }
             return newValue;
         });
+        } catch (Exception ex) { throw new Exception("Error in filling FieldID:" + ex.getMessage()); }
     }
 
     private static Object[] fillArrayWithValues(Field field, Object[] values, FuncTT<Object, Object> fillRule) throws Exception {

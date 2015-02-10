@@ -15,7 +15,7 @@ public class FilterData {
     public FilterData() { }
 
     public FilterData(String[] whiteList, String[] blackList, FuncTT<String, Boolean> fieldsRule,
-                      String[] availableGroups, String breadcrumb) {
+              String[] availableGroups, String breadcrumb) {
         this.whiteList = whiteList;
         this.blackList = blackList;
         this.fieldsRule = fieldsRule;
@@ -28,21 +28,27 @@ public class FilterData {
     }
 
     public boolean allowGeneration() throws Exception {
-        if (fieldsRule != null)
-            return fieldsRule.invoke(breadcrumb);
-        if (whiteList != null && whiteList.length > 0) {
-            for(String value : whiteList)
-                if (breadcrumb.contains(value))
-                    return true;
-            return false;
-        }
-        if (blackList != null && blackList.length > 0) {
-            for(String value : blackList)
-                if (breadcrumb.contains(value))
-                    return false;
+        try {
+            if (fieldsRule != null)
+                return fieldsRule.invoke(breadcrumb);
+        } catch (Exception ex) { throw new Exception("Error in field rules:" + ex.getMessage()); }
+        try {
+            if (whiteList != null && whiteList.length > 0) {
+                for(String value : whiteList)
+                    if (breadcrumb.contains(value))
+                        return true;
+                return false;
+            }
+        } catch (Exception ex) { throw new Exception("Error in whiteList rules:" + ex.getMessage()); }
+        try {
+            if (blackList != null && blackList.length > 0) {
+                for(String value : blackList)
+                    if (breadcrumb.contains(value))
+                        return false;
+                return true;
+            }
             return true;
-        }
-        return true;
+        } catch (Exception ex) { throw new Exception("Error in blackList rules:" + ex.getMessage()); }
     }
 
 }

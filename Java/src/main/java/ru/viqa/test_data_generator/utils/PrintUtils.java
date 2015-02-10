@@ -6,6 +6,7 @@ import java.io.File;
 import java.io.FileWriter;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import static java.lang.String.join;
@@ -35,13 +36,22 @@ public class PrintUtils {
                         : field.get(obj));
     }
 
-    private static String printArray(String delimiter, Object[] array) {
+    public static String printArray(String delimiter, Object[] array) {
         if (array == null || array.length == 0)
             return "";
         String result = "";
         for(int i = 0; i < array.length - 1; i++)
             result += array[i] + delimiter;
         return result + array[array.length - 1];
+    }
+
+    public static String printCollection(Collection<String> list) {
+        if (list == null || list.size() == 0)
+            return "";
+        String result = "";
+        for(String str : list)
+            result += str + ";";
+        return result;
     }
 
     public static <T> String printTestData(List<T> list) throws Exception {
